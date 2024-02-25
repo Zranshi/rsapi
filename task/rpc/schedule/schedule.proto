@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package schedule;
+option go_package="./schedule";
+
+message Request {
+  string ping = 1;
+}
+
+message Response {
+  string pong = 1;
+}
+
+service Schedule {
+  rpc Ping(Request) returns(Response);
+}

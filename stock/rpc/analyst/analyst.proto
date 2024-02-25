@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package analyst;
+option go_package="./analyst";
+
+message Request {
+  string ping = 1;
+}
+
+message Response {
+  string pong = 1;
+}
+
+service Analyst {
+  rpc Ping(Request) returns(Response);
+}

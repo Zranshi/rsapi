@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package parser;
+option go_package="./parser";
+
+message Request {
+  string ping = 1;
+}
+
+message Response {
+  string pong = 1;
+}
+
+service Parser {
+  rpc Ping(Request) returns(Response);
+}

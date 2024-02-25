@@ -1,0 +1,41 @@
+syntax = "v1"
+
+import "./define/common.api"
+
+info (
+	title:   "ranshi api"
+	desc:    "Start exploring"
+	author:  "ranshi"
+	email:   "ranshi159@icloud.com"
+	version: "0.0.0"
+)
+
+type (
+	LoginReq {
+		Email string `json:"email"`
+		Pwd   string `json:"pwd"`
+	}
+	LoginResp {
+		DefaultResp
+	}
+	RegisterReq {
+		Email string `json:"email"`
+		Pwd   string `json:"pwd"`
+	}
+	RegisterResp {
+		DefaultResp
+	}
+)
+
+@server (
+	prefix: /v1
+	group:  auth
+)
+service api {
+	@handler Login
+	post /login (LoginReq) returns (LoginResp)
+
+	@handler Register
+	post /register (RegisterReq) returns (RegisterResp)
+}
+

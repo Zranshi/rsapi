@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package room;
+option go_package="./room";
+
+message Request {
+  string ping = 1;
+}
+
+message Response {
+  string pong = 1;
+}
+
+service Room {
+  rpc Ping(Request) returns(Response);
+}

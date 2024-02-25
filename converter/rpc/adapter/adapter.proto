@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package adapter;
+option go_package="./adapter";
+
+message Request {
+  string ping = 1;
+}
+
+message Response {
+  string pong = 1;
+}
+
+service Adapter {
+  rpc Ping(Request) returns(Response);
+}

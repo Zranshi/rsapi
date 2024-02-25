@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package formatter;
+option go_package="./formatter";
+
+message Request {
+  string ping = 1;
+}
+
+message Response {
+  string pong = 1;
+}
+
+service Formatter {
+  rpc Ping(Request) returns(Response);
+}

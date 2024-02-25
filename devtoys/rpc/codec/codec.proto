@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package codec;
+option go_package="./codec";
+
+message Request {
+  string ping = 1;
+}
+
+message Response {
+  string pong = 1;
+}
+
+service Codec {
+  rpc Ping(Request) returns(Response);
+}

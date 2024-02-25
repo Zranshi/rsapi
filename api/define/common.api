@@ -1,0 +1,18 @@
+syntax = "v1"
+
+type (
+    DefaultResp {
+        // Whether to complete the expected task
+        Ok bool `json:"ok"`
+        // Error message
+        Msg string `json:"msg"`
+    }
+    PageReq {
+        // Cursor for page query
+        Cursor int64 `path:"cursor"`
+        // Page size for page query
+        PageSize int64 `path:"pagesize"`
+        // Whether the final page
+        IsEnd int64 `query:"is_end"`
+    }
+)
