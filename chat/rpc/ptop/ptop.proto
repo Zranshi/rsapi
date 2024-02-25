@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package p2p;
-option go_package="./p2p";
+package ptop;
+option go_package="./ptop";
 
 message Request {
   string ping = 1;
@@ -11,6 +11,6 @@ message Response {
   string pong = 1;
 }
 
-service P2p {
+service Ptop {
   rpc Ping(Request) returns(Response);
 }

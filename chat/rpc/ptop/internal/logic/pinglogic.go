@@ -3,8 +3,8 @@ package logic
 import (
 	"context"
 
-	"rsapi/chat/rpc/p2p/internal/svc"
-	"rsapi/chat/rpc/p2p/p2p"
+	"rsapi/chat/rpc/ptop/internal/svc"
+	"rsapi/chat/rpc/ptop/ptop"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -23,8 +23,8 @@ func NewPingLogic(ctx context.Context, svcCtx *svc.ServiceContext) *PingLogic {
 	}
 }
 
-func (l *PingLogic) Ping(in *p2p.Request) (*p2p.Response, error) {
+func (l *PingLogic) Ping(in *ptop.Request) (*ptop.Response, error) {
 	// todo: add your logic here and delete this line
 
-	return &p2p.Response{}, nil
+	return &ptop.Response{}, nil
 }

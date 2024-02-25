@@ -1,6 +1,6 @@
 package svc
 
-import "rsapi/chat/rpc/p2p/internal/config"
+import "rsapi/chat/rpc/ptop/internal/config"
 
 type ServiceContext struct {
 	Config config.Config

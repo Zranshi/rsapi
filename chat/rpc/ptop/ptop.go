@@ -4,10 +4,10 @@ import (
 	"flag"
 	"fmt"
 
-	"rsapi/chat/rpc/p2p/internal/config"
-	"rsapi/chat/rpc/p2p/internal/server"
-	"rsapi/chat/rpc/p2p/internal/svc"
-	"rsapi/chat/rpc/p2p/p2p"
+	"rsapi/chat/rpc/ptop/internal/config"
+	"rsapi/chat/rpc/ptop/internal/server"
+	"rsapi/chat/rpc/ptop/internal/svc"
+	"rsapi/chat/rpc/ptop/ptop"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -16,7 +16,7 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-var configFile = flag.String("f", "etc/p2p.yaml", "the config file")
+var configFile = flag.String("f", "etc/ptop.yaml", "the config file")
 
 func main() {
 	flag.Parse()
@@ -26,7 +26,7 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		p2p.RegisterP2PServer(grpcServer, server.NewP2PServer(ctx))
+		ptop.RegisterPtopServer(grpcServer, server.NewPtopServer(ctx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)
