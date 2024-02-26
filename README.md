@@ -4,7 +4,19 @@
 
 ### User
 
+- v0.0.1
+    - [ ] user login
+    - [ ] user logout
+    - [ ] user register
+    - [ ] user profile and edit
+
 ### Token
+
+- v0.0.1
+    - [ ] token check
+    - [ ] token refresh
+    - [ ] token revoke
+    - [ ] jwt token
 
 ## Chat
 
