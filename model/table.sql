@@ -22,3 +22,15 @@ create table auth_role
     constraint unique_name
         unique (name)
 ) comment 'role table';
+
+
+create table mall_goods
+(
+    id          bigint auto_increment,
+    name        varchar(255)  default ''      not null,
+    images      varchar(1023) default '{}'    not null,
+    description text                          null,
+    create_at   datetime      default (now()) not null,
+    update_at   datetime      default (now()) not null on update CURRENT_TIMESTAMP,
+    primary key (id)
+) comment 'user table';
