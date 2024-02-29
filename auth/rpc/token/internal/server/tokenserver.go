@@ -22,7 +22,17 @@ func NewTokenServer(svcCtx *svc.ServiceContext) *TokenServer {
 	}
 }
 
-func (s *TokenServer) Ping(ctx context.Context, in *token.Request) (*token.Response, error) {
-	l := logic.NewPingLogic(ctx, s.svcCtx)
-	return l.Ping(in)
+func (s *TokenServer) Generate(ctx context.Context, in *token.GenerateReq) (*token.GenerateRes, error) {
+	l := logic.NewGenerateLogic(ctx, s.svcCtx)
+	return l.Generate(in)
+}
+
+func (s *TokenServer) Verify(ctx context.Context, in *token.VerifyReq) (*token.VerifyRes, error) {
+	l := logic.NewVerifyLogic(ctx, s.svcCtx)
+	return l.Verify(in)
+}
+
+func (s *TokenServer) Invalid(ctx context.Context, in *token.InvalidReq) (*token.InvalidRes, error) {
+	l := logic.NewInvalidLogic(ctx, s.svcCtx)
+	return l.Invalid(in)
 }

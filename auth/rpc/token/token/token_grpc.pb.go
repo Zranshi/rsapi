@@ -19,14 +19,18 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Token_Ping_FullMethodName = "/token.Token/Ping"
+	Token_Generate_FullMethodName = "/token.Token/Generate"
+	Token_Verify_FullMethodName   = "/token.Token/Verify"
+	Token_Invalid_FullMethodName  = "/token.Token/Invalid"
 )
 
 // TokenClient is the client API for Token service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TokenClient interface {
-	Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
+	Generate(ctx context.Context, in *GenerateReq, opts ...grpc.CallOption) (*GenerateRes, error)
+	Verify(ctx context.Context, in *VerifyReq, opts ...grpc.CallOption) (*VerifyRes, error)
+	Invalid(ctx context.Context, in *InvalidReq, opts ...grpc.CallOption) (*InvalidRes, error)
 }
 
 type tokenClient struct {
@@ -37,9 +41,27 @@ func NewTokenClient(cc grpc.ClientConnInterface) TokenClient {
 	return &tokenClient{cc}
 }
 
-func (c *tokenClient) Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
-	out := new(Response)
-	err := c.cc.Invoke(ctx, Token_Ping_FullMethodName, in, out, opts...)
+func (c *tokenClient) Generate(ctx context.Context, in *GenerateReq, opts ...grpc.CallOption) (*GenerateRes, error) {
+	out := new(GenerateRes)
+	err := c.cc.Invoke(ctx, Token_Generate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tokenClient) Verify(ctx context.Context, in *VerifyReq, opts ...grpc.CallOption) (*VerifyRes, error) {
+	out := new(VerifyRes)
+	err := c.cc.Invoke(ctx, Token_Verify_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tokenClient) Invalid(ctx context.Context, in *InvalidReq, opts ...grpc.CallOption) (*InvalidRes, error) {
+	out := new(InvalidRes)
+	err := c.cc.Invoke(ctx, Token_Invalid_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +72,9 @@ func (c *tokenClient) Ping(ctx context.Context, in *Request, opts ...grpc.CallOp
 // All implementations must embed UnimplementedTokenServer
 // for forward compatibility
 type TokenServer interface {
-	Ping(context.Context, *Request) (*Response, error)
+	Generate(context.Context, *GenerateReq) (*GenerateRes, error)
+	Verify(context.Context, *VerifyReq) (*VerifyRes, error)
+	Invalid(context.Context, *InvalidReq) (*InvalidRes, error)
 	mustEmbedUnimplementedTokenServer()
 }
 
@@ -58,8 +82,14 @@ type TokenServer interface {
 type UnimplementedTokenServer struct {
 }
 
-func (UnimplementedTokenServer) Ping(context.Context, *Request) (*Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
+func (UnimplementedTokenServer) Generate(context.Context, *GenerateReq) (*GenerateRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Generate not implemented")
+}
+func (UnimplementedTokenServer) Verify(context.Context, *VerifyReq) (*VerifyRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Verify not implemented")
+}
+func (UnimplementedTokenServer) Invalid(context.Context, *InvalidReq) (*InvalidRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Invalid not implemented")
 }
 func (UnimplementedTokenServer) mustEmbedUnimplementedTokenServer() {}
 
@@ -74,20 +104,56 @@ func RegisterTokenServer(s grpc.ServiceRegistrar, srv TokenServer) {
 	s.RegisterService(&Token_ServiceDesc, srv)
 }
 
-func _Token_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Request)
+func _Token_Generate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GenerateReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TokenServer).Ping(ctx, in)
+		return srv.(TokenServer).Generate(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Token_Ping_FullMethodName,
+		FullMethod: Token_Generate_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TokenServer).Ping(ctx, req.(*Request))
+		return srv.(TokenServer).Generate(ctx, req.(*GenerateReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Token_Verify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TokenServer).Verify(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Token_Verify_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TokenServer).Verify(ctx, req.(*VerifyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Token_Invalid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InvalidReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TokenServer).Invalid(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Token_Invalid_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TokenServer).Invalid(ctx, req.(*InvalidReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -100,8 +166,16 @@ var Token_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*TokenServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Ping",
-			Handler:    _Token_Ping_Handler,
+			MethodName: "Generate",
+			Handler:    _Token_Generate_Handler,
+		},
+		{
+			MethodName: "Verify",
+			Handler:    _Token_Verify_Handler,
+		},
+		{
+			MethodName: "Invalid",
+			Handler:    _Token_Invalid_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
