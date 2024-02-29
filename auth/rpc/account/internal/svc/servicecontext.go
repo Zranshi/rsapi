@@ -1,9 +1,9 @@
 package svc
 
 import (
-	"rsapi/auth/model"
 	"rsapi/auth/rpc/account/internal/config"
 	"rsapi/auth/rpc/token/tokenclient"
+	"rsapi/model"
 
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/zrpc"

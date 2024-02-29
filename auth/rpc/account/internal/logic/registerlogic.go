@@ -2,10 +2,10 @@ package logic
 
 import (
 	"context"
-	"rsapi/auth/model"
 	"rsapi/auth/rpc/account/account"
 	"rsapi/auth/rpc/account/internal"
 	"rsapi/auth/rpc/account/internal/svc"
+	"rsapi/model"
 	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
