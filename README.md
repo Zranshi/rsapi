@@ -5,18 +5,19 @@
 ### User
 
 - v0.0.1
-    - [ ] user login
-    - [ ] user logout
-    - [ ] user register
-    - [ ] user profile and edit
+  - [x] user login
+  - [x] user logout
+  - [x] user signout
+  - [x] user register
+  - [x] user profile and edit
 
 ### Token
 
 - v0.0.1
-    - [ ] token check
-    - [ ] token refresh
-    - [ ] token revoke
-    - [ ] jwt token
+  - [x] token verify
+  - [x] token generate
+  - [x] token refresh
+  - [x] token invalid
 
 ## Chat
 

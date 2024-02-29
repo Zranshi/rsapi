@@ -13,11 +13,17 @@ import (
 )
 
 type (
-	Request  = token.Request
-	Response = token.Response
+	GenerateReq = token.GenerateReq
+	GenerateRes = token.GenerateRes
+	InvalidReq  = token.InvalidReq
+	InvalidRes  = token.InvalidRes
+	VerifyReq   = token.VerifyReq
+	VerifyRes   = token.VerifyRes
 
 	Token interface {
-		Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
+		Generate(ctx context.Context, in *GenerateReq, opts ...grpc.CallOption) (*GenerateRes, error)
+		Verify(ctx context.Context, in *VerifyReq, opts ...grpc.CallOption) (*VerifyRes, error)
+		Invalid(ctx context.Context, in *InvalidReq, opts ...grpc.CallOption) (*InvalidRes, error)
 	}
 
 	defaultToken struct {
@@ -31,7 +37,17 @@ func NewToken(cli zrpc.Client) Token {
 	}
 }
 
-func (m *defaultToken) Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
+func (m *defaultToken) Generate(ctx context.Context, in *GenerateReq, opts ...grpc.CallOption) (*GenerateRes, error) {
 	client := token.NewTokenClient(m.cli.Conn())
-	return client.Ping(ctx, in, opts...)
+	return client.Generate(ctx, in, opts...)
+}
+
+func (m *defaultToken) Verify(ctx context.Context, in *VerifyReq, opts ...grpc.CallOption) (*VerifyRes, error) {
+	client := token.NewTokenClient(m.cli.Conn())
+	return client.Verify(ctx, in, opts...)
+}
+
+func (m *defaultToken) Invalid(ctx context.Context, in *InvalidReq, opts ...grpc.CallOption) (*InvalidRes, error) {
+	client := token.NewTokenClient(m.cli.Conn())
+	return client.Invalid(ctx, in, opts...)
 }

@@ -3,14 +3,40 @@ syntax = "proto3";
 package token;
 option go_package="./token";
 
-message Request {
-  string ping = 1;
+service Token{
+    rpc Generate(GenerateReq) returns(GenerateRes);
+    rpc Verify(VerifyReq) returns(VerifyRes);
+    rpc Invalid(InvalidReq) returns(InvalidRes);
 }
 
-message Response {
-  string pong = 1;
+message GenerateReq{
+    // email, email can identify a user
+    string email = 1;
+    // expire time second after now
+    int64 expire = 2;
+    // system role of the token
+    optional string role = 3;
 }
 
-service Token {
-  rpc Ping(Request) returns(Response);
+message GenerateRes{
+    string token = 1;
 }
+
+message VerifyReq{
+    // waiting for verifying token
+    string token = 1;
+    // whether to refresh
+    bool refreash = 2;
+}
+
+message VerifyRes{
+    // if refreash flag is true, token will be refreshed. else, token will be the same of the request
+    string token = 1;
+}
+
+message InvalidReq{
+    optional string token = 1;
+    optional string email = 2;
+}
+
+message InvalidRes{}

@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package account;
+option go_package = "./account";
+
+service Account{
+	rpc Login(LoginReq) returns(LoginRes);
+	rpc Register(RegisterReq) returns(RegisterRes);
+	rpc Logout(LogoutReq) returns(LogoutRes);
+	rpc Info(InfoReq) returns(InfoRes);
+	rpc Edit(EditReq) returns(EditRes);
+	rpc Signout(SignOutReq) returns(SignOutRes);
+}
+
+message LoginReq{
+	string email = 1;
+	string pwd = 2;
+}
+message LoginRes{
+	string token = 1;
+}
+
+message RegisterReq{
+	string email = 1;
+	string pwd = 2;
+	string name = 3;
+}
+message RegisterRes{
+	string email = 1;
+}
+
+message LogoutReq{
+	string email = 1;
+}
+message LogoutRes{}
+
+message InfoReq{
+	string email = 1;
+}
+message InfoRes{
+	string name = 3;
+}
+
+message EditReq{
+	optional string name = 1;
+	optional string pwd = 2;
+	string email = 3;
+}
+message EditRes{}
+
+message SignOutReq{
+	string email = 1;
+	string pwd = 2;
+}
+message SignOutRes{}
