@@ -53,9 +53,29 @@
 
 ### Cart
 
+- v0.0.1
+  - [x] add goods to cart
+  - [x] delete goods from cart
+  - [x] list goods from cart
+
 ### Goods
 
+- v0.0.1
+  - [x] add goods
+  - [x] edit goods
+  - [x] delete goods
+  - [x] list goods
+  - [x] detail goods
+
 ### Order
+
+- v0.0.1
+  - [x] create order
+  - [x] cancel order
+  - [x] complete order
+  - [x] remove order
+  - [x] detail order
+  - [x] list all orders
 
 ## Ordertable
 

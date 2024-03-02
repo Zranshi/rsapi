@@ -19,14 +19,22 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Goods_Ping_FullMethodName = "/goods.Goods/Ping"
+	Goods_Add_FullMethodName    = "/goods.Goods/Add"
+	Goods_Edit_FullMethodName   = "/goods.Goods/Edit"
+	Goods_List_FullMethodName   = "/goods.Goods/List"
+	Goods_Detail_FullMethodName = "/goods.Goods/Detail"
+	Goods_Delete_FullMethodName = "/goods.Goods/Delete"
 )
 
 // GoodsClient is the client API for Goods service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GoodsClient interface {
-	Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
+	Add(ctx context.Context, in *AddReq, opts ...grpc.CallOption) (*AddRes, error)
+	Edit(ctx context.Context, in *EditReq, opts ...grpc.CallOption) (*EditRes, error)
+	List(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListRes, error)
+	Detail(ctx context.Context, in *DetailReq, opts ...grpc.CallOption) (*DetailRes, error)
+	Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*DeleteRes, error)
 }
 
 type goodsClient struct {
@@ -37,9 +45,45 @@ func NewGoodsClient(cc grpc.ClientConnInterface) GoodsClient {
 	return &goodsClient{cc}
 }
 
-func (c *goodsClient) Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
-	out := new(Response)
-	err := c.cc.Invoke(ctx, Goods_Ping_FullMethodName, in, out, opts...)
+func (c *goodsClient) Add(ctx context.Context, in *AddReq, opts ...grpc.CallOption) (*AddRes, error) {
+	out := new(AddRes)
+	err := c.cc.Invoke(ctx, Goods_Add_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goodsClient) Edit(ctx context.Context, in *EditReq, opts ...grpc.CallOption) (*EditRes, error) {
+	out := new(EditRes)
+	err := c.cc.Invoke(ctx, Goods_Edit_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goodsClient) List(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListRes, error) {
+	out := new(ListRes)
+	err := c.cc.Invoke(ctx, Goods_List_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goodsClient) Detail(ctx context.Context, in *DetailReq, opts ...grpc.CallOption) (*DetailRes, error) {
+	out := new(DetailRes)
+	err := c.cc.Invoke(ctx, Goods_Detail_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goodsClient) Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*DeleteRes, error) {
+	out := new(DeleteRes)
+	err := c.cc.Invoke(ctx, Goods_Delete_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +94,11 @@ func (c *goodsClient) Ping(ctx context.Context, in *Request, opts ...grpc.CallOp
 // All implementations must embed UnimplementedGoodsServer
 // for forward compatibility
 type GoodsServer interface {
-	Ping(context.Context, *Request) (*Response, error)
+	Add(context.Context, *AddReq) (*AddRes, error)
+	Edit(context.Context, *EditReq) (*EditRes, error)
+	List(context.Context, *ListReq) (*ListRes, error)
+	Detail(context.Context, *DetailReq) (*DetailRes, error)
+	Delete(context.Context, *DeleteReq) (*DeleteRes, error)
 	mustEmbedUnimplementedGoodsServer()
 }
 
@@ -58,8 +106,20 @@ type GoodsServer interface {
 type UnimplementedGoodsServer struct {
 }
 
-func (UnimplementedGoodsServer) Ping(context.Context, *Request) (*Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
+func (UnimplementedGoodsServer) Add(context.Context, *AddReq) (*AddRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Add not implemented")
+}
+func (UnimplementedGoodsServer) Edit(context.Context, *EditReq) (*EditRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Edit not implemented")
+}
+func (UnimplementedGoodsServer) List(context.Context, *ListReq) (*ListRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedGoodsServer) Detail(context.Context, *DetailReq) (*DetailRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Detail not implemented")
+}
+func (UnimplementedGoodsServer) Delete(context.Context, *DeleteReq) (*DeleteRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedGoodsServer) mustEmbedUnimplementedGoodsServer() {}
 
@@ -74,20 +134,92 @@ func RegisterGoodsServer(s grpc.ServiceRegistrar, srv GoodsServer) {
 	s.RegisterService(&Goods_ServiceDesc, srv)
 }
 
-func _Goods_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Request)
+func _Goods_Add_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GoodsServer).Ping(ctx, in)
+		return srv.(GoodsServer).Add(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Goods_Ping_FullMethodName,
+		FullMethod: Goods_Add_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GoodsServer).Ping(ctx, req.(*Request))
+		return srv.(GoodsServer).Add(ctx, req.(*AddReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Goods_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EditReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoodsServer).Edit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Goods_Edit_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoodsServer).Edit(ctx, req.(*EditReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Goods_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoodsServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Goods_List_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoodsServer).List(ctx, req.(*ListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Goods_Detail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DetailReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoodsServer).Detail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Goods_Detail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoodsServer).Detail(ctx, req.(*DetailReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Goods_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoodsServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Goods_Delete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoodsServer).Delete(ctx, req.(*DeleteReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -100,8 +232,24 @@ var Goods_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*GoodsServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Ping",
-			Handler:    _Goods_Ping_Handler,
+			MethodName: "Add",
+			Handler:    _Goods_Add_Handler,
+		},
+		{
+			MethodName: "Edit",
+			Handler:    _Goods_Edit_Handler,
+		},
+		{
+			MethodName: "List",
+			Handler:    _Goods_List_Handler,
+		},
+		{
+			MethodName: "Detail",
+			Handler:    _Goods_Detail_Handler,
+		},
+		{
+			MethodName: "Delete",
+			Handler:    _Goods_Delete_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

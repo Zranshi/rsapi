@@ -13,11 +13,24 @@ import (
 )
 
 type (
-	Request  = goods.Request
-	Response = goods.Response
+	AddReq    = goods.AddReq
+	AddRes    = goods.AddRes
+	DeleteReq = goods.DeleteReq
+	DeleteRes = goods.DeleteRes
+	DetailReq = goods.DetailReq
+	DetailRes = goods.DetailRes
+	EditReq   = goods.EditReq
+	EditRes   = goods.EditRes
+	GoodsItem = goods.GoodsItem
+	ListReq   = goods.ListReq
+	ListRes   = goods.ListRes
 
 	Goods interface {
-		Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
+		Add(ctx context.Context, in *AddReq, opts ...grpc.CallOption) (*AddRes, error)
+		Edit(ctx context.Context, in *EditReq, opts ...grpc.CallOption) (*EditRes, error)
+		List(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListRes, error)
+		Detail(ctx context.Context, in *DetailReq, opts ...grpc.CallOption) (*DetailRes, error)
+		Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*DeleteRes, error)
 	}
 
 	defaultGoods struct {
@@ -31,7 +44,27 @@ func NewGoods(cli zrpc.Client) Goods {
 	}
 }
 
-func (m *defaultGoods) Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
+func (m *defaultGoods) Add(ctx context.Context, in *AddReq, opts ...grpc.CallOption) (*AddRes, error) {
 	client := goods.NewGoodsClient(m.cli.Conn())
-	return client.Ping(ctx, in, opts...)
+	return client.Add(ctx, in, opts...)
+}
+
+func (m *defaultGoods) Edit(ctx context.Context, in *EditReq, opts ...grpc.CallOption) (*EditRes, error) {
+	client := goods.NewGoodsClient(m.cli.Conn())
+	return client.Edit(ctx, in, opts...)
+}
+
+func (m *defaultGoods) List(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListRes, error) {
+	client := goods.NewGoodsClient(m.cli.Conn())
+	return client.List(ctx, in, opts...)
+}
+
+func (m *defaultGoods) Detail(ctx context.Context, in *DetailReq, opts ...grpc.CallOption) (*DetailRes, error) {
+	client := goods.NewGoodsClient(m.cli.Conn())
+	return client.Detail(ctx, in, opts...)
+}
+
+func (m *defaultGoods) Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*DeleteRes, error) {
+	client := goods.NewGoodsClient(m.cli.Conn())
+	return client.Delete(ctx, in, opts...)
 }

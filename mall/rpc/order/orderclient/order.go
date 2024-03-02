@@ -13,11 +13,27 @@ import (
 )
 
 type (
-	Request  = order.Request
-	Response = order.Response
+	CancelReq   = order.CancelReq
+	CancelRes   = order.CancelRes
+	CompleteReq = order.CompleteReq
+	CompleteRes = order.CompleteRes
+	CreateReq   = order.CreateReq
+	CreateRes   = order.CreateRes
+	DeleteReq   = order.DeleteReq
+	DeleteRes   = order.DeleteRes
+	DetailReq   = order.DetailReq
+	DetailRes   = order.DetailRes
+	ListReq     = order.ListReq
+	ListRes     = order.ListRes
+	OrderItem   = order.OrderItem
 
 	Order interface {
-		Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
+		Create(ctx context.Context, in *CreateReq, opts ...grpc.CallOption) (*CreateRes, error)
+		List(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListRes, error)
+		Detail(ctx context.Context, in *DetailReq, opts ...grpc.CallOption) (*DetailRes, error)
+		Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*DeleteRes, error)
+		Cancel(ctx context.Context, in *CancelReq, opts ...grpc.CallOption) (*CancelRes, error)
+		Complete(ctx context.Context, in *CompleteReq, opts ...grpc.CallOption) (*CompleteRes, error)
 	}
 
 	defaultOrder struct {
@@ -31,7 +47,32 @@ func NewOrder(cli zrpc.Client) Order {
 	}
 }
 
-func (m *defaultOrder) Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
+func (m *defaultOrder) Create(ctx context.Context, in *CreateReq, opts ...grpc.CallOption) (*CreateRes, error) {
 	client := order.NewOrderClient(m.cli.Conn())
-	return client.Ping(ctx, in, opts...)
+	return client.Create(ctx, in, opts...)
+}
+
+func (m *defaultOrder) List(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListRes, error) {
+	client := order.NewOrderClient(m.cli.Conn())
+	return client.List(ctx, in, opts...)
+}
+
+func (m *defaultOrder) Detail(ctx context.Context, in *DetailReq, opts ...grpc.CallOption) (*DetailRes, error) {
+	client := order.NewOrderClient(m.cli.Conn())
+	return client.Detail(ctx, in, opts...)
+}
+
+func (m *defaultOrder) Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*DeleteRes, error) {
+	client := order.NewOrderClient(m.cli.Conn())
+	return client.Delete(ctx, in, opts...)
+}
+
+func (m *defaultOrder) Cancel(ctx context.Context, in *CancelReq, opts ...grpc.CallOption) (*CancelRes, error) {
+	client := order.NewOrderClient(m.cli.Conn())
+	return client.Cancel(ctx, in, opts...)
+}
+
+func (m *defaultOrder) Complete(ctx context.Context, in *CompleteReq, opts ...grpc.CallOption) (*CompleteRes, error) {
+	client := order.NewOrderClient(m.cli.Conn())
+	return client.Complete(ctx, in, opts...)
 }

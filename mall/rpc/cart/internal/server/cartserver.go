@@ -22,7 +22,17 @@ func NewCartServer(svcCtx *svc.ServiceContext) *CartServer {
 	}
 }
 
-func (s *CartServer) Ping(ctx context.Context, in *cart.Request) (*cart.Response, error) {
-	l := logic.NewPingLogic(ctx, s.svcCtx)
-	return l.Ping(in)
+func (s *CartServer) Push(ctx context.Context, in *cart.PushReq) (*cart.PushRes, error) {
+	l := logic.NewPushLogic(ctx, s.svcCtx)
+	return l.Push(in)
+}
+
+func (s *CartServer) Pop(ctx context.Context, in *cart.PopReq) (*cart.PopRes, error) {
+	l := logic.NewPopLogic(ctx, s.svcCtx)
+	return l.Pop(in)
+}
+
+func (s *CartServer) List(ctx context.Context, in *cart.ListReq) (*cart.ListRes, error) {
+	l := logic.NewListLogic(ctx, s.svcCtx)
+	return l.List(in)
 }

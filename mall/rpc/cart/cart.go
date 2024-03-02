@@ -3,8 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-
+	"github.com/zeromicro/go-zero/core/logx"
 	"rsapi/mall/rpc/cart/cart"
+	"rsapi/util"
+
 	"rsapi/mall/rpc/cart/internal/config"
 	"rsapi/mall/rpc/cart/internal/server"
 	"rsapi/mall/rpc/cart/internal/svc"
@@ -23,7 +25,18 @@ func main() {
 
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
+
+	if c.Service.RandomPort {
+		port, err := util.GetRandomPort(10000, 20000)
+		if err != nil {
+			panic(err)
+		}
+		c.ListenOn = fmt.Sprintf("127.0.0.1:%d", port)
+	}
+
 	ctx := svc.NewServiceContext(c)
+
+	logx.DisableStat()
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		cart.RegisterCartServer(grpcServer, server.NewCartServer(ctx))

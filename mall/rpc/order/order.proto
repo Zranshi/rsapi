@@ -3,14 +3,63 @@ syntax = "proto3";
 package order;
 option go_package="./order";
 
-message Request {
-  string ping = 1;
-}
-
-message Response {
-  string pong = 1;
-}
-
 service Order {
-  rpc Ping(Request) returns(Response);
+    rpc Create(CreateReq) returns(CreateRes);
+    rpc List(ListReq) returns(ListRes);
+    rpc Detail(DetailReq) returns(DetailRes);
+    rpc Delete(DeleteReq) returns(DeleteRes);
+    rpc Cancel(CancelReq) returns(CancelRes);
+    rpc Complete(CompleteReq) returns(CompleteRes);
+}
+
+message OrderItem{
+    int64 Id = 1;
+    int64 UserId = 2;
+    int64 GoodsId = 3;
+    int64 Count = 4;
+    int64 Status = 5;
+}
+
+message CreateReq{
+    int64 user_id = 1;
+    int64 goods_id = 2;
+    int64 count = 3;
+}
+message CreateRes{
+    int64 id = 1;
+}
+
+message ListReq{
+    int64 user_id = 1;
+}
+message ListRes{
+    repeated OrderItem items = 2;
+}
+
+message DetailReq{
+    int64 id = 1;
+}
+message DetailRes{
+    OrderItem item = 1;
+}
+
+message DeleteReq{
+    int64 id = 1;
+}
+message DeleteRes{
+    OrderItem item = 1;
+}
+
+message CancelReq{
+    int64 id = 1;
+}
+message CancelRes{
+    OrderItem item = 1;
+}
+
+message CompleteReq{
+    int64 id = 1;
+}
+message CompleteRes{
+    OrderItem item = 1;
 }

@@ -1,0 +1,7 @@
+#! /bin/sh
+
+nohup go run ./auth/rpc/token/token.go -f ./auth/rpc/token/etc/token.yaml
+
+go run ./auth/rpc/account/account.go -f ./auth/rpc/account/etc/account.yaml
+
+go run ./mall/rpc/

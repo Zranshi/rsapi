@@ -22,7 +22,27 @@ func NewGoodsServer(svcCtx *svc.ServiceContext) *GoodsServer {
 	}
 }
 
-func (s *GoodsServer) Ping(ctx context.Context, in *goods.Request) (*goods.Response, error) {
-	l := logic.NewPingLogic(ctx, s.svcCtx)
-	return l.Ping(in)
+func (s *GoodsServer) Add(ctx context.Context, in *goods.AddReq) (*goods.AddRes, error) {
+	l := logic.NewAddLogic(ctx, s.svcCtx)
+	return l.Add(in)
+}
+
+func (s *GoodsServer) Edit(ctx context.Context, in *goods.EditReq) (*goods.EditRes, error) {
+	l := logic.NewEditLogic(ctx, s.svcCtx)
+	return l.Edit(in)
+}
+
+func (s *GoodsServer) List(ctx context.Context, in *goods.ListReq) (*goods.ListRes, error) {
+	l := logic.NewListLogic(ctx, s.svcCtx)
+	return l.List(in)
+}
+
+func (s *GoodsServer) Detail(ctx context.Context, in *goods.DetailReq) (*goods.DetailRes, error) {
+	l := logic.NewDetailLogic(ctx, s.svcCtx)
+	return l.Detail(in)
+}
+
+func (s *GoodsServer) Delete(ctx context.Context, in *goods.DeleteReq) (*goods.DeleteRes, error) {
+	l := logic.NewDeleteLogic(ctx, s.svcCtx)
+	return l.Delete(in)
 }

@@ -13,11 +13,18 @@ import (
 )
 
 type (
-	Request  = cart.Request
-	Response = cart.Response
+	CartItem = cart.CartItem
+	ListReq  = cart.ListReq
+	ListRes  = cart.ListRes
+	PopReq   = cart.PopReq
+	PopRes   = cart.PopRes
+	PushReq  = cart.PushReq
+	PushRes  = cart.PushRes
 
 	Cart interface {
-		Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
+		Push(ctx context.Context, in *PushReq, opts ...grpc.CallOption) (*PushRes, error)
+		Pop(ctx context.Context, in *PopReq, opts ...grpc.CallOption) (*PopRes, error)
+		List(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListRes, error)
 	}
 
 	defaultCart struct {
@@ -31,7 +38,17 @@ func NewCart(cli zrpc.Client) Cart {
 	}
 }
 
-func (m *defaultCart) Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
+func (m *defaultCart) Push(ctx context.Context, in *PushReq, opts ...grpc.CallOption) (*PushRes, error) {
 	client := cart.NewCartClient(m.cli.Conn())
-	return client.Ping(ctx, in, opts...)
+	return client.Push(ctx, in, opts...)
+}
+
+func (m *defaultCart) Pop(ctx context.Context, in *PopReq, opts ...grpc.CallOption) (*PopRes, error) {
+	client := cart.NewCartClient(m.cli.Conn())
+	return client.Pop(ctx, in, opts...)
+}
+
+func (m *defaultCart) List(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListRes, error) {
+	client := cart.NewCartClient(m.cli.Conn())
+	return client.List(ctx, in, opts...)
 }

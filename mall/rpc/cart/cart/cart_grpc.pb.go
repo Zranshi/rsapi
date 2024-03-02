@@ -19,14 +19,18 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Cart_Ping_FullMethodName = "/cart.Cart/Ping"
+	Cart_Push_FullMethodName = "/cart.Cart/Push"
+	Cart_Pop_FullMethodName  = "/cart.Cart/Pop"
+	Cart_List_FullMethodName = "/cart.Cart/List"
 )
 
 // CartClient is the client API for Cart service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CartClient interface {
-	Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
+	Push(ctx context.Context, in *PushReq, opts ...grpc.CallOption) (*PushRes, error)
+	Pop(ctx context.Context, in *PopReq, opts ...grpc.CallOption) (*PopRes, error)
+	List(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListRes, error)
 }
 
 type cartClient struct {
@@ -37,9 +41,27 @@ func NewCartClient(cc grpc.ClientConnInterface) CartClient {
 	return &cartClient{cc}
 }
 
-func (c *cartClient) Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
-	out := new(Response)
-	err := c.cc.Invoke(ctx, Cart_Ping_FullMethodName, in, out, opts...)
+func (c *cartClient) Push(ctx context.Context, in *PushReq, opts ...grpc.CallOption) (*PushRes, error) {
+	out := new(PushRes)
+	err := c.cc.Invoke(ctx, Cart_Push_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cartClient) Pop(ctx context.Context, in *PopReq, opts ...grpc.CallOption) (*PopRes, error) {
+	out := new(PopRes)
+	err := c.cc.Invoke(ctx, Cart_Pop_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cartClient) List(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListRes, error) {
+	out := new(ListRes)
+	err := c.cc.Invoke(ctx, Cart_List_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +72,9 @@ func (c *cartClient) Ping(ctx context.Context, in *Request, opts ...grpc.CallOpt
 // All implementations must embed UnimplementedCartServer
 // for forward compatibility
 type CartServer interface {
-	Ping(context.Context, *Request) (*Response, error)
+	Push(context.Context, *PushReq) (*PushRes, error)
+	Pop(context.Context, *PopReq) (*PopRes, error)
+	List(context.Context, *ListReq) (*ListRes, error)
 	mustEmbedUnimplementedCartServer()
 }
 
@@ -58,8 +82,14 @@ type CartServer interface {
 type UnimplementedCartServer struct {
 }
 
-func (UnimplementedCartServer) Ping(context.Context, *Request) (*Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
+func (UnimplementedCartServer) Push(context.Context, *PushReq) (*PushRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Push not implemented")
+}
+func (UnimplementedCartServer) Pop(context.Context, *PopReq) (*PopRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Pop not implemented")
+}
+func (UnimplementedCartServer) List(context.Context, *ListReq) (*ListRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedCartServer) mustEmbedUnimplementedCartServer() {}
 
@@ -74,20 +104,56 @@ func RegisterCartServer(s grpc.ServiceRegistrar, srv CartServer) {
 	s.RegisterService(&Cart_ServiceDesc, srv)
 }
 
-func _Cart_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Request)
+func _Cart_Push_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PushReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CartServer).Ping(ctx, in)
+		return srv.(CartServer).Push(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Cart_Ping_FullMethodName,
+		FullMethod: Cart_Push_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CartServer).Ping(ctx, req.(*Request))
+		return srv.(CartServer).Push(ctx, req.(*PushReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Cart_Pop_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PopReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CartServer).Pop(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Cart_Pop_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CartServer).Pop(ctx, req.(*PopReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Cart_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CartServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Cart_List_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CartServer).List(ctx, req.(*ListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -100,8 +166,16 @@ var Cart_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*CartServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Ping",
-			Handler:    _Cart_Ping_Handler,
+			MethodName: "Push",
+			Handler:    _Cart_Push_Handler,
+		},
+		{
+			MethodName: "Pop",
+			Handler:    _Cart_Pop_Handler,
+		},
+		{
+			MethodName: "List",
+			Handler:    _Cart_List_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

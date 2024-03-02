@@ -3,14 +3,62 @@ syntax = "proto3";
 package goods;
 option go_package="./goods";
 
-message Request {
-  string ping = 1;
-}
-
-message Response {
-  string pong = 1;
-}
-
 service Goods {
-  rpc Ping(Request) returns(Response);
+  rpc Add(AddReq) returns(AddRes);
+  rpc Edit(EditReq) returns(EditRes);
+  rpc List(ListReq) returns(ListRes);
+  rpc Detail(DetailReq) returns(DetailRes);
+  rpc Delete(DeleteReq) returns(DeleteRes);
+}
+
+message GoodsItem {
+  int64 Id = 1;
+  string Name = 2;
+  string Description = 3;
+  repeated string Images = 4;
+}
+
+message AddReq{
+  string Name = 1;
+  string Description = 2;
+  repeated string Images = 3;
+}
+
+message AddRes{
+  int64 Id = 1;
+}
+
+message EditReq{
+  int64 Id = 1;
+  optional string Name = 2;
+  optional string Description = 3;
+  repeated string Images = 4;
+}
+
+message EditRes{
+  int64 Id = 1;
+}
+
+message ListReq{
+  optional string Query = 1;
+}
+
+message ListRes{
+  repeated GoodsItem items = 1;
+}
+
+message DetailReq{
+  int64 Id = 1;
+}
+
+message DetailRes{
+  GoodsItem item = 1;
+}
+
+message DeleteReq{
+  int64 Id = 1;
+}
+
+message DeleteRes{
+  int64 Id = 1;
 }

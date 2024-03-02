@@ -22,7 +22,32 @@ func NewOrderServer(svcCtx *svc.ServiceContext) *OrderServer {
 	}
 }
 
-func (s *OrderServer) Ping(ctx context.Context, in *order.Request) (*order.Response, error) {
-	l := logic.NewPingLogic(ctx, s.svcCtx)
-	return l.Ping(in)
+func (s *OrderServer) Create(ctx context.Context, in *order.CreateReq) (*order.CreateRes, error) {
+	l := logic.NewCreateLogic(ctx, s.svcCtx)
+	return l.Create(in)
+}
+
+func (s *OrderServer) List(ctx context.Context, in *order.ListReq) (*order.ListRes, error) {
+	l := logic.NewListLogic(ctx, s.svcCtx)
+	return l.List(in)
+}
+
+func (s *OrderServer) Detail(ctx context.Context, in *order.DetailReq) (*order.DetailRes, error) {
+	l := logic.NewDetailLogic(ctx, s.svcCtx)
+	return l.Detail(in)
+}
+
+func (s *OrderServer) Delete(ctx context.Context, in *order.DeleteReq) (*order.DeleteRes, error) {
+	l := logic.NewDeleteLogic(ctx, s.svcCtx)
+	return l.Delete(in)
+}
+
+func (s *OrderServer) Cancel(ctx context.Context, in *order.CancelReq) (*order.CancelRes, error) {
+	l := logic.NewCancelLogic(ctx, s.svcCtx)
+	return l.Cancel(in)
+}
+
+func (s *OrderServer) Complete(ctx context.Context, in *order.CompleteReq) (*order.CompleteRes, error) {
+	l := logic.NewCompleteLogic(ctx, s.svcCtx)
+	return l.Complete(in)
 }

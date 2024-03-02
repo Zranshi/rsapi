@@ -3,14 +3,38 @@ syntax = "proto3";
 package cart;
 option go_package="./cart";
 
-message Request {
-  string ping = 1;
-}
-
-message Response {
-  string pong = 1;
-}
-
 service Cart {
-  rpc Ping(Request) returns(Response);
+  rpc Push(PushReq) returns(PushRes);
+  rpc Pop(PopReq) returns(PopRes);
+  rpc List(ListReq) returns(ListRes);
+}
+
+message CartItem{
+  int64 Id = 1;
+  int64 GoodsId = 3;
+  int64 Count = 4;
+}
+
+message PushReq{
+  int64 user_id = 1;
+  int64 goods_id = 2;
+  int64 count = 3;
+}
+message PushRes{
+  int64 id = 1;
+}
+
+message PopReq{
+  int64 id = 1;
+  int64 count = 2;
+}
+message PopRes{
+  int64 count = 1;
+}
+
+message ListReq{
+  int64 user_id = 1;
+}
+message ListRes{
+  repeated CartItem items = 1;
 }
