@@ -3,8 +3,8 @@ package logic
 import (
 	"context"
 	"rsapi/auth/rpc/account/account"
-	"rsapi/auth/rpc/account/internal"
 	"rsapi/auth/rpc/account/internal/svc"
+	"rsapi/util"
 	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -28,14 +28,14 @@ func (l *EditLogic) Edit(in *account.EditReq) (*account.EditRes, error) {
 	resp := new(account.EditRes)
 
 	u, err := l.svcCtx.UserM.FindOneByEmail(l.ctx, in.Email)
-	if err != nil || u == nil {
-		return resp, internal.ErrAccountNotExist
+	if err != nil {
+		return resp, util.DbErr(err)
 	}
 
 	if in.Pwd != nil {
 		key, err := pwd2Key(*in.Pwd, l.svcCtx.Config.Service.PasswordSalt)
 		if err != nil {
-			return resp, internal.ErrHashPwd
+			return resp, util.ParseErr(err)
 		}
 		u.Key = key
 		u.UpdateAt = time.Now()
@@ -46,7 +46,7 @@ func (l *EditLogic) Edit(in *account.EditReq) (*account.EditRes, error) {
 	}
 
 	if err := l.svcCtx.UserM.Update(l.ctx, u); err != nil {
-		return resp, internal.ErrUpdateFailed
+		return resp, util.DbErr(err)
 	}
 	return resp, nil
 }

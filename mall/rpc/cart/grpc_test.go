@@ -1,4 +1,4 @@
-package test
+package main
 
 import (
 	"context"
@@ -26,23 +26,23 @@ func TestCartRpc(t *testing.T) {
 	})
 	assert.Equal(t, nil, err)
 
-	listRes, err := cli.List(context.TODO(), &cartclient.ListReq{})
+	listRes, err := cli.List(context.TODO(), &cartclient.ListReq{UserId: 57})
 	assert.Equal(t, nil, err)
 
 	for _, item := range listRes.Items {
 		if item.Id == pushRes.Id {
-			assert.Equal(t, 6, item.Count)
+			assert.Equal(t, int64(6), item.Count)
 		}
 	}
 
 	cli.Pop(context.TODO(), &cartclient.PopReq{Id: pushRes.Id, Count: 5})
 
-	listRes, err = cli.List(context.TODO(), &cartclient.ListReq{})
+	listRes, err = cli.List(context.TODO(), &cartclient.ListReq{UserId: 57})
 	assert.Equal(t, nil, err)
 
 	for _, item := range listRes.Items {
 		if item.Id == pushRes.Id {
-			assert.Equal(t, 6, item.Count)
+			assert.Equal(t, int64(5), item.Count)
 		}
 	}
 }

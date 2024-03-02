@@ -3,9 +3,9 @@ package logic
 import (
 	"context"
 
-	"rsapi/auth/rpc/token/internal"
 	"rsapi/auth/rpc/token/internal/svc"
 	"rsapi/auth/rpc/token/token"
+	"rsapi/util"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -36,14 +36,14 @@ func (l *GenerateLogic) Generate(in *token.GenerateReq) (*token.GenerateRes, err
 	claims.Expire = in.Expire
 	// Gererate token
 	if token, err := GenerateJwt(claims, l.svcCtx.Config.Service.JwtSecret); err != nil {
-		return resp, internal.ErrJwtGen
+		return resp, util.ParseErr(err)
 	} else {
 		resp.Token = token
 	}
 
 	// save token in redis
 	if err := kv.Hset("token", in.Email, resp.Token); err != nil {
-		return resp, internal.ErrRedisHSet
+		return resp, util.DbErr(err)
 	}
 
 	return resp, nil

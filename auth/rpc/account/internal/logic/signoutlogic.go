@@ -4,10 +4,12 @@ import (
 	"context"
 
 	"rsapi/auth/rpc/account/account"
-	"rsapi/auth/rpc/account/internal"
 	"rsapi/auth/rpc/account/internal/svc"
+	"rsapi/util"
 
 	"github.com/zeromicro/go-zero/core/logx"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type SignoutLogic struct {
@@ -28,17 +30,17 @@ func (l *SignoutLogic) Signout(in *account.SignOutReq) (*account.SignOutRes, err
 	resp := new(account.SignOutRes)
 	// check account
 	if u, err := l.svcCtx.UserM.FindOneByEmail(l.ctx, in.Email); err != nil || u == nil {
-		return resp, internal.ErrAccountNotExist
+		return resp, util.DbErr(err)
 	} else {
 		// check pwd
 		if key, err := pwd2Key(in.Pwd, l.svcCtx.Config.Service.PasswordSalt); err != nil {
-			return resp, internal.ErrHashPwd
+			return resp, util.ParseErr(err)
 		} else if key != u.Key {
-			return resp, internal.ErrPwdNotMatch
+			return resp, status.Error(codes.Unauthenticated, "pwd not match")
 		}
 		// delete user instance
 		if err := l.svcCtx.UserM.Delete(l.ctx, u.Id); err != nil {
-			return resp, internal.ErrDeleteFailed
+			return resp, util.DbErr(err)
 		}
 		return resp, nil
 	}

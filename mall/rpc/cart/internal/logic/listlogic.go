@@ -28,9 +28,23 @@ func (l *ListLogic) List(in *cart.ListReq) (*cart.ListRes, error) {
 	resp := new(cart.ListRes)
 	resp.Items = make([]*cart.CartItem, 0)
 
-	err := l.svcCtx.RdbConn.QueryRowsCtx(l.ctx, &resp.Items, "SELECT * FROM mall_cart WHERE user_id = ?", in.UserId)
+	rows := make([]struct {
+		Id      int64 `db:"id"`
+		GoodsId int64 `db:"goods_id"`
+		Count   int64 `db:"count"`
+	}, 0)
+
+	err := l.svcCtx.RdbConn.QueryRowsCtx(l.ctx, &rows, "SELECT * FROM mall_cart WHERE user_id = ?", in.UserId)
 	if err != nil {
 		return resp, util.DbErr(err)
+	}
+	resp.Items = make([]*cart.CartItem, len(rows))
+	for i, row := range rows {
+		resp.Items[i] = &cart.CartItem{
+			Id:      row.Id,
+			GoodsId: row.GoodsId,
+			Count:   row.Count,
+		}
 	}
 	return resp, nil
 }

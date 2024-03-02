@@ -2,11 +2,10 @@ package logic
 
 import (
 	"context"
-	"errors"
 
-	"rsapi/auth/rpc/token/internal"
 	"rsapi/auth/rpc/token/internal/svc"
 	"rsapi/auth/rpc/token/token"
+	"rsapi/util"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,32 +32,29 @@ func (l *VerifyLogic) Verify(in *token.VerifyReq) (*token.VerifyRes, error) {
 	// parse token
 	claims, err := ParseJwt(in.Token, l.svcCtx.Config.Service.JwtSecret)
 	if err != nil {
-		if errors.Is(err, internal.ErrJwtExpired) {
-			_, err := kv.Hdel("token", claims.Email)
-			if err != nil {
-				return resp, internal.ErrJwtExpired
-			}
-			return resp, internal.ErrJwtExpired
+		_, err := kv.Hdel("token", claims.Email)
+		if err != nil {
+			return resp, util.DbErr(err)
 		}
-		return nil, internal.ErrJwtParse
+		return resp, util.ParseErr(err)
 	}
 
 	// Verify token
 	if token, err := kv.Hget("token", claims.Email); err != nil && token != in.Token {
-		return resp, internal.ErrJwtExpired
+		return resp, util.DbErr(err)
 	}
 
 	// refresh token
 	if in.Refreash {
 		if token, err := GenerateJwt(claims, l.svcCtx.Config.Service.JwtSecret); err != nil {
-			return resp, internal.ErrJwtGen
+			return resp, util.ParseErr(err)
 		} else {
 			resp.Token = token
 		}
 
 		// save token in redis
 		if err := kv.Hset("token", claims.Email, resp.Token); err != nil {
-			return resp, internal.ErrRedisHSet
+			return resp, util.DbErr(err)
 		}
 	}
 

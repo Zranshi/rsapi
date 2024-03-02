@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"rsapi/auth/rpc/account/account"
-	"rsapi/auth/rpc/account/internal"
 	"rsapi/auth/rpc/account/internal/svc"
 	"rsapi/auth/rpc/token/tokenclient"
+	"rsapi/util"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -29,7 +29,7 @@ func (l *LogoutLogic) Logout(in *account.LogoutReq) (*account.LogoutRes, error) 
 	resp := new(account.LogoutRes)
 	_, err := l.svcCtx.TokenRpc.Invalid(l.ctx, &tokenclient.InvalidReq{Email: &in.Email})
 	if err != nil {
-		return resp, internal.ErrRpcCall
+		return resp, util.RpcCallErr(err, "token.rpc")
 	}
 	return resp, nil
 }

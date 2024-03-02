@@ -12,3 +12,11 @@ func DbErr(err error) error {
 func IllegalArgumentErr(params string) error {
 	return status.Errorf(codes.InvalidArgument, "illegal argument: %s", params)
 }
+
+func ParseErr(err error) error {
+	return status.Errorf(codes.Internal, "parse error: %v", err)
+}
+
+func RpcCallErr(err error, fromRpc string) error {
+	return status.Errorf(codes.Internal, "rpc call error: %s, %v", fromRpc, err)
+}

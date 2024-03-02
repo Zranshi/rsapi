@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"rsapi/auth/rpc/token/internal"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -32,6 +31,6 @@ func ParseJwt(tokenString string, secret string) (*Claims, error) {
 	} else if claims, ok := token.Claims.(*Claims); ok && token.Valid {
 		return claims, nil
 	} else {
-		return claims, internal.ErrJwtExpired
+		return claims, err
 	}
 }

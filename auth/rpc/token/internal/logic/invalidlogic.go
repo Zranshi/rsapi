@@ -2,11 +2,10 @@ package logic
 
 import (
 	"context"
-	"errors"
 
-	"rsapi/auth/rpc/token/internal"
 	"rsapi/auth/rpc/token/internal/svc"
 	"rsapi/auth/rpc/token/token"
+	"rsapi/util"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -30,25 +29,22 @@ func (l *InvalidLogic) Invalid(in *token.InvalidReq) (*token.InvalidRes, error) 
 	kv := l.svcCtx.KvConn
 	if in.Email != nil {
 		if _, err := kv.Hdel("token", *in.Email); err != nil {
-			return resp, internal.ErrRedisHdel
+			return resp, util.DbErr(err)
 		}
 	} else if in.Token != nil {
 		if claims, err := ParseJwt(*in.Token, l.svcCtx.Config.Service.JwtSecret); err != nil {
-			if errors.Is(err, internal.ErrJwtExpired) {
-				_, err := kv.Hdel("token", claims.Email)
-				if err != nil {
-					return resp, internal.ErrRedisHdel
-				}
-				return resp, internal.ErrJwtExpired
+			_, err := kv.Hdel("token", claims.Email)
+			if err != nil {
+				return resp, util.DbErr(err)
 			}
-			return resp, internal.ErrJwtParse
+			return resp, util.ParseErr(err)
 		} else {
 			if _, err := kv.Hdel("token", claims.Email); err != nil {
-				return resp, internal.ErrRedisHdel
+				return resp, util.DbErr(err)
 			}
 		}
 	} else {
-		return resp, internal.ErrInvalidParam
+		return resp, util.IllegalArgumentErr("need Email or token")
 	}
 	return resp, nil
 }
